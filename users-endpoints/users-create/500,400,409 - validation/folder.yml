@@ -1,0 +1,7 @@
+info:
+  name: 500,400,409 - validation
+  type: folder
+  seq: 2
+
+request:
+  auth: inherit

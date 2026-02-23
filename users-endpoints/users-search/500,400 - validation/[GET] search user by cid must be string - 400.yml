@@ -1,0 +1,27 @@
+info:
+  name: "[GET] search user by cid must be string - 400"
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{user_endpoint}}/api/users/search"
+  body:
+    type: json
+    data: '{ "cid": 1234567890986 }'
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "400"
+    - expression: res.body.message
+      operator: eq
+      value: cid must be a string
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

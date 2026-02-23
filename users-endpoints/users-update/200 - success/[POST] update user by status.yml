@@ -1,0 +1,69 @@
+info:
+  name: "[POST] update user by status"
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{user_endpoint}}/api/users/update"
+  body:
+    type: json
+    data: |-
+      {
+          "cid": "{{cid_update_status}}",
+          "status": "{{status_update}}"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const endpoint = bru.getEnvVar("user_endpoint");
+        const cid_status = bru.getEnvVar("cid_update_status");
+
+        // console.log(cid_status);
+
+        const response = await axios.post(`${endpoint}/api/users/search`, {
+          cid: cid_status
+        });
+
+        // console.log(JSON.stringify(response.data)); 
+
+        const currentStatus = response.data.data.status;
+        console.log("current status:", currentStatus);
+
+        // toggle status
+        if (currentStatus === "active") {
+          bru.setVar("status_update", "inactive");
+        } else {
+          bru.setVar("status_update", "active");
+        }
+
+        // console.log("status_update value:", bru.getVar("status_update"));
+    - type: tests
+      code: |-
+        const resBody = res.getBody();
+        const status = resBody.data.status;
+        const deleteUser = resBody.data.delete_user;
+
+        test("status and delete_user should match", function() {
+          if (status === "inactive") {
+            expect(deleteUser).to.equal(true);
+          } else if (status === "active") {
+            expect(deleteUser).to.equal(false);
+          }
+        });
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+    - expression: res.body.message
+      operator: eq
+      value: User updated successfully
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

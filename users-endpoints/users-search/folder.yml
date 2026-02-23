@@ -1,0 +1,7 @@
+info:
+  name: /users/search
+  type: folder
+  seq: 1
+
+request:
+  auth: inherit

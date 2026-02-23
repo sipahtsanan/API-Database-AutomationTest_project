@@ -1,0 +1,32 @@
+info:
+  name: "[POST] update user by invalid surname"
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{user_endpoint}}/api/users/update"
+  body:
+    type: json
+    data: |-
+      {
+          "cid": "{{cid_update_invalid}}",
+          "name": "runScript_name_update_{{randomNumber}}",
+          "surname": "ttttttttttttttttttttttest_runScript_surname_update_{{randomNumber}}"
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "400"
+    - expression: res.body.message
+      operator: eq
+      value: surname must not exceed 50 characters
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,39 @@
+info:
+  name: "[POST] user create by cid already exist"
+  type: http
+  seq: 7
+
+http:
+  method: POST
+  url: "{{user_endpoint}}/api/users"
+  body:
+    type: json
+    data: |-
+      {
+          "cid": "{{cid_test}}",
+          "name": "runScript_name_invalid",
+          "surname": "runScript_surname_invalid"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        const reqBody = req.getBody();
+        const exist_cid = reqBody.cid;
+        const resBody = res.getBody();
+
+        test("message should contain cid", function() {
+          expect(resBody.message).to.equal(`User with cid '${exist_cid}' already exists`);
+        });
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "409"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,16 @@
+name: user-dev
+variables:
+  - secret: true
+    name: user_endpoint
+  - name: cid_test
+    value: "1234567890123"
+  - name: cid_update
+    value: "4662269233397"
+  - name: cid_update_status
+    value: "3475675203388"
+  - name: cid_update_invalid
+    value: "4419822967543"
+  - name: cid_not_found
+    value: "0999999999990"
+  - name: cid_status_delete
+    value: "4545028251742"

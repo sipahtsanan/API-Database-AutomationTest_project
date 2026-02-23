@@ -1,0 +1,7 @@
+info:
+  name: /users-delete
+  type: folder
+  seq: 4
+
+request:
+  auth: inherit

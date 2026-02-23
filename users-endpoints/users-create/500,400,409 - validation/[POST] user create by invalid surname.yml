@@ -1,0 +1,32 @@
+info:
+  name: "[POST] user create by invalid surname"
+  type: http
+  seq: 5
+
+http:
+  method: POST
+  url: "{{user_endpoint}}/api/users"
+  body:
+    type: json
+    data: |-
+      {
+          "cid": "{{gen_cid}}",
+          "name": "runScript_surname_invalid",
+          "surname": "runScript_surname_invalid_testttttttttttttttttttttt"
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.body.message
+      operator: eq
+      value: surname must not exceed 50 characters
+    - expression: res.status
+      operator: eq
+      value: "400"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

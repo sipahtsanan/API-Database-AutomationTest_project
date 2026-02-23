@@ -1,0 +1,30 @@
+info:
+  name: "[GET] search user by invalid cid - 500"
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{user_endpoint}}/api/users/search"
+  body:
+    type: json
+    data: "{ \"cid\": 'test' }"
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.body.success
+      operator: eq
+      value: "false"
+    - expression: res.status
+      operator: eq
+      value: "500"
+    - expression: res.body.message
+      operator: eq
+      value: Internal server error
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

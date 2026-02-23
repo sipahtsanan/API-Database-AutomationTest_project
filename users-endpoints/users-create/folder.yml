@@ -1,0 +1,15 @@
+info:
+  name: /users-create
+  type: folder
+  seq: 1
+
+request:
+  auth: inherit
+  scripts:
+    - type: before-request
+      code: |-
+        const cid = Math.floor(1000000000000 + Math.random() * 9000000000000).toString();
+        bru.setVar("gen_cid", cid);
+
+        const invalid_cid = Math.floor(100000000000 + Math.random() * 900000000000).toString();
+        bru.setVar("invalid_cid", invalid_cid);

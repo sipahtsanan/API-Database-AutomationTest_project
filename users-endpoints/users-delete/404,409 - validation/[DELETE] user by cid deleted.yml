@@ -1,0 +1,37 @@
+info:
+  name: "[DELETE] user by cid deleted"
+  type: http
+  seq: 2
+
+http:
+  method: DELETE
+  url: "{{user_endpoint}}/api/users"
+  body:
+    type: json
+    data: |-
+      {
+        "cid": "{{cid_status_delete}}"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        const reqBody = req.getBody();
+        const cidDeleted = reqBody.cid;
+        const resBody = res.getBody();
+
+        test("message should contain cid", function() {
+          expect(resBody.message).to.equal(`User with cid '${cidDeleted}' is already deleted`);
+        });
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "409"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,54 @@
+info:
+  name: "[DELETE] user by cid"
+  type: http
+  seq: 1
+
+http:
+  method: DELETE
+  url: "{{user_endpoint}}/api/users"
+  body:
+    type: json
+    data: |-
+      {
+        "cid": "{{cid_demo}}"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const endpoint = bru.getEnvVar("user_endpoint");
+        const cid = Math.floor(1000000000000 + Math.random() * 9000000000000).toString();
+
+        const response = await axios.post(`${endpoint}/api/users`, {
+          cid: cid,
+          name: "runScript_name_deleted",
+          surname: "runScript_surname_deleted"
+        });
+
+        // console.log(JSON.stringify(response.data)); 
+        bru.setVar("cid_demo", response.data.data.cid);
+        // console.log(bru.getVar("cid_demo"));
+  assertions:
+    - expression: res.body.message
+      operator: eq
+      value: User soft-deleted successfully
+    - expression: res.body.data.cid
+      operator: eq
+      value: "'{{cid_demo}}'"
+    - expression: res.status
+      operator: eq
+      value: "200"
+    - expression: res.body.data.status
+      operator: eq
+      value: inactive
+    - expression: res.body.data.delete_user
+      operator: eq
+      value: "true"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

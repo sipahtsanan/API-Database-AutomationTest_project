@@ -1,0 +1,52 @@
+info:
+  name: "[POST] update user by name and surname"
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{user_endpoint}}/api/users/update"
+  body:
+    type: json
+    data: |-
+      {
+          "cid": "{{cid_update}}",
+          "name": "runScript_name_update_{{randomNumber}}",
+          "surname": "runScript_surname_update_{{randomNumber}}"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        const reqBody = req.getBody();
+        const update_cid = reqBody.cid;
+        const update_name = reqBody.name;
+        const update_surname = reqBody.surname;
+
+        const resBody = res.getBody();
+        test("message should contain cid, name and surname", function() {
+          expect(resBody.data.cid).to.equal(update_cid);
+          expect(resBody.data.name).to.equal(update_name);
+          expect(resBody.data.surname).to.equal(update_surname);
+        });
+  assertions:
+    - expression: res.body.data.status
+      operator: eq
+      value: active
+    - expression: res.body.data.delete_user
+      operator: eq
+      value: "false"
+    - expression: res.status
+      operator: eq
+      value: "200"
+    - expression: res.body.message
+      operator: eq
+      value: User updated successfully
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

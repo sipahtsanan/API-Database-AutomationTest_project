@@ -1,0 +1,12 @@
+info:
+  name: /users/update
+  type: folder
+  seq: 1
+
+request:
+  auth: inherit
+  scripts:
+    - type: before-request
+      code: |-
+        const randomNumber = Math.floor(100 + Math.random() * 900).toString();
+        bru.setVar("randomNumber", randomNumber);

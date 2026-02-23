@@ -1,0 +1,55 @@
+info:
+  name: "[GET] search user by id"
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{user_endpoint}}/api/users/search"
+  body:
+    type: json
+    data: '{ "cid": "{{cid_test}}" }'
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        // const endpoint = bru.getEnvVar("user_endpoint");
+        // const cid = Math.floor(1000000000000 + Math.random() * 9000000000000).toString();
+
+        // const response = await axios.post(`${endpoint}/api/users`, {
+        //   cid: cid,
+        //   name: "runScript_name",
+        //   surname: "runScript_surname"
+        // });
+
+        // // console.log(JSON.stringify(response.data)); 
+        // bru.setVar("cid_demo", response.data.data.cid);
+        // // console.log(bru.getVar("cid_demo"));
+    - type: after-response
+      code: |-
+        // const endpoint = bru.getEnvVar("user_endpoint");
+        // const delete_cid_demo = bru.getVar("cid_demo");
+        // // console.log(delete_cid_demo);
+
+        // const response = await axios.delete(`${endpoint}/api/users`, {
+        //   data: {
+        //     cid: delete_cid_demo  // ไม่มี quotes
+        //   }
+        // });
+
+        // // console.log(JSON.stringify(response.data));
+  assertions:
+    - expression: res.body.data.cid
+      operator: contains
+      value: "1234567890123"
+    - expression: res.status
+      operator: eq
+      value: "200"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,32 @@
+info:
+  name: "[POST] user create by invalid cid - 500"
+  type: http
+  seq: 8
+
+http:
+  method: POST
+  url: "{{user_endpoint}}/api/users"
+  body:
+    type: json
+    data: |-
+      {
+          "cid": '',
+          "name": "runScript_name_invalid",
+          "surname": "runScript_surname_invalid"
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "500"
+    - expression: res.body.message
+      operator: eq
+      value: Internal server error
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

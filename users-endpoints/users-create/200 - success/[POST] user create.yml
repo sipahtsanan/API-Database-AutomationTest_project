@@ -1,0 +1,46 @@
+info:
+  name: "[POST] user create"
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{user_endpoint}}/api/users"
+  body:
+    type: json
+    data: |-
+      {
+          "cid": "{{gen_cid}}",
+          "name": "runScript_name",
+          "surname": "runScript_name"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        // const cid = Math.floor(1000000000000 + Math.random() * 9000000000000).toString();
+        // bru.setVar("gen_cid", cid);
+    - type: tests
+      code: |-
+        const reqBody = req.getBody();
+        const cid = reqBody.cid;
+        const resBody = res.getBody();
+
+        test("cid in response should match cid in request", function() {
+          expect(resBody.data.cid).to.equal(cid);
+        });
+  assertions:
+    - expression: res.body.message
+      operator: contains
+      value: User created successfully
+    - expression: res.status
+      operator: eq
+      value: "201"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

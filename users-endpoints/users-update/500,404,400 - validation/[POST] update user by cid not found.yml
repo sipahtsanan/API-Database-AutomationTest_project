@@ -1,0 +1,39 @@
+info:
+  name: "[POST] update user by cid not found"
+  type: http
+  seq: 6
+
+http:
+  method: POST
+  url: "{{user_endpoint}}/api/users/update"
+  body:
+    type: json
+    data: |-
+      {
+          "cid": "{{cid_not_found}}",
+          "name": "ttttttttttttttttttttttest_runScript_name_update_{{randomNumber}}",
+          "surname": "runScript_surname_update_{{randomNumber}}"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        const reqBody = req.getBody();
+        const cidBody = reqBody.cid;
+        const resBody = res.getBody();
+
+        test("message should contain cid", function() {
+          expect(resBody.message).to.equal(`User with cid '${cidBody}' not found`);
+        });
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "404"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

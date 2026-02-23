@@ -1,0 +1,32 @@
+info:
+  name: "[POST] user create by cid must be exactly 13 digits"
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: "{{user_endpoint}}/api/users"
+  body:
+    type: json
+    data: |-
+      {
+          "cid": "{{invalid_cid}}",
+          "name": "runScript_name_invalid",
+          "surname": "runScript_surname_invalid"
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.body.message
+      operator: contains
+      value: cid must be exactly 13 digits
+    - expression: res.status
+      operator: eq
+      value: "400"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

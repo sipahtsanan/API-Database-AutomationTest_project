@@ -1,0 +1,31 @@
+info:
+  name: "[POST] update user by cid is required"
+  type: http
+  seq: 5
+
+http:
+  method: POST
+  url: "{{user_endpoint}}/api/users/update"
+  body:
+    type: json
+    data: |-
+      {
+          "name": "ttttttttttttttttttttttest_runScript_name_update_{{randomNumber}}",
+          "surname": "runScript_surname_update_{{randomNumber}}"
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "400"
+    - expression: res.body.message
+      operator: eq
+      value: cid is required
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

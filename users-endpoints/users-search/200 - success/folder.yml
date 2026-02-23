@@ -1,0 +1,7 @@
+info:
+  name: 200 - success
+  type: folder
+  seq: 1
+
+request:
+  auth: inherit

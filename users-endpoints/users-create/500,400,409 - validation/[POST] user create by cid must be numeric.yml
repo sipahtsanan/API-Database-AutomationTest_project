@@ -1,0 +1,32 @@
+info:
+  name: "[POST] user create by cid must be numeric"
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{user_endpoint}}/api/users"
+  body:
+    type: json
+    data: |-
+      {
+          "cid": "test",
+          "name": "runScript_name_invalid",
+          "surname": "runScript_surname_invalid"
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.body.message
+      operator: eq
+      value: cid must be numeric
+    - expression: res.status
+      operator: eq
+      value: "400"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

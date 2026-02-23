@@ -1,0 +1,32 @@
+info:
+  name: "[POST] update user by invalid name"
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{user_endpoint}}/api/users/update"
+  body:
+    type: json
+    data: |-
+      {
+          "cid": "{{cid_update_invalid}}",
+          "name": "ttttttttttttttttttttttest_runScript_name_update_{{randomNumber}}",
+          "surname": "runScript_surname_update_{{randomNumber}}"
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "400"
+    - expression: res.body.message
+      operator: eq
+      value: name must not exceed 50 characters
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,35 @@
+info:
+  name: "[POST] update user by error 500"
+  type: http
+  seq: 7
+
+http:
+  method: POST
+  url: "{{user_endpoint}}/api/users/update"
+  body:
+    type: json
+    data: |-
+      {
+          "cid": test,
+          "name": "ttttttttttttttttttttttest_runScript_name_update_{{randomNumber}}",
+          "surname": "runScript_surname_update_{{randomNumber}}"
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "500"
+    - expression: res.body.success
+      operator: eq
+      value: "false"
+    - expression: res.body.message
+      operator: eq
+      value: Internal server error
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
