@@ -124,7 +124,7 @@ Content-Type: application/json
 ## ✅ Business Rules
 
 - `cid` is **mandatory** for every endpoint
-- `cid` must be **numeric only**, max **13 digits**
+- `cid` must be **numeric only**, must be **13 digits**
 - **Create:** `status = active`, `delete_user = false` always
 - **Update to inactive:** automatically sets `delete_user = true`
 - **Soft Delete:** sets `delete_user = true`, `status = inactive` (record is preserved)
